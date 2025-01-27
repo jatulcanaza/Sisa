@@ -1,6 +1,9 @@
+import { Navbar } from "@/components/Navbar";
 
 export default function sisa() {
   return (
-    <div>page</div>
+   <main>
+    <Navbar />
+   </main>
   )
 }
