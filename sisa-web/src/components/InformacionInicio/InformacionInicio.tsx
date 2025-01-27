@@ -19,7 +19,7 @@ export function InformacionInicio() {
               </p>
             </div>
             <div className="mt-5 self-start">
-              <button className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl">
+              <button className="px-8 py-3 text-white bg-[#FB6F92]  hover:bg-[#E46585] rounded-xl">
                 ¡Crear tu ramo único ahora!
               </button>
             </div>
