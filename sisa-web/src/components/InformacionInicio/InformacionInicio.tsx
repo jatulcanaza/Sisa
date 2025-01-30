@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link'; // Importa el componente Link
 
 export function InformacionInicio() {
   return (
@@ -19,9 +20,12 @@ export function InformacionInicio() {
               </p>
             </div>
             <div className="mt-5 self-start">
-              <button className="px-8 py-3 text-white bg-[#FB6F92]  hover:bg-[#E46585] rounded-xl">
-                ¡Crear tu ramo único ahora!
-              </button>
+              {/* Envuelve el botón con el componente Link */}
+              <Link href="/crear_ramo" passHref>
+                <button className="px-8 py-3 text-white bg-[#FB6F92] hover:bg-[#E46585] rounded-xl">
+                  ¡Crear tu ramo único ahora!
+                </button>
+              </Link>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 
 export function Inicio() {
   return (
-    <div id="Inicio" className="p-5 bg-[#fcfcfc] md:px-2 md:py-5">
+    <div id="Inicio" className="pt-24 bg-[#ffffff] md:px-2 my-16">
       {/* Contenedor con imagen de fondo ajustada */}
       <div
         className="relative bg-cover bg-no-repeat rounded-lg"
