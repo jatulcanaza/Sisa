@@ -1,4 +1,4 @@
 node_modules/
 .env
-.DS_Store.next/
-sisa-web/ .next
+.DS_Store
+sisa-web/.next
