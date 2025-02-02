@@ -1,0 +1,25 @@
+{
+  "name": "proyecto_desarrollo",
+  "version": "1.0.0",
+  "description": "Proyecto de una página web de flores implementando Inteligencia Artificial",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jatulcanaza/Sisa.git"
+  },
+  "keywords": [
+    "Flores",
+    "AI",
+    "plataforma",
+    "web"
+  ],
+  "author": "Tulcanaza Juan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jatulcanaza/Sisa/issues"
+  },
+  "homepage": "https://github.com/jatulcanaza/Sisa#readme"
+}
