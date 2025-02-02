@@ -1,2 +1,0 @@
-# Sisa
-Proyecto Sisa
