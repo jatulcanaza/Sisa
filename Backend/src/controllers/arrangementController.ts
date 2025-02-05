@@ -1,6 +1,16 @@
 import { Request, Response } from 'express';
 import Arrangement from '../models/Arrangement';
 
+// Controlador para obtener todos los arreglos florales
+export const getArrangements = async (req: Request, res: Response) => {
+  try {
+    const arrangements = await Arrangement.find(); // Busca todos los arreglos en MongoDB
+    res.json(arrangements);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los arreglos', error });
+  }
+};
+
 // Crear un nuevo ramo
 export const createArrangement = async (req: Request, res: Response) => {
   try {
