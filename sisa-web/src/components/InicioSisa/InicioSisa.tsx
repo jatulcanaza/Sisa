@@ -17,9 +17,6 @@ export function InicioSisa() {
             <h1 className="text-3xl md:text-6xl font-bold leading-tight">
               Sisa 
             </h1>
-            <p className="mt-3 md:mt-5 text-lg md:text-3xl">
-            "Tips"
-          </p>
           </div>
         </div>
       </div>
