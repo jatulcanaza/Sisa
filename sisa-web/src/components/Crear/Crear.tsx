@@ -101,7 +101,7 @@ export function Crear() {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Crea tu ramo sisa</h1>
+      <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo sisa</h1>
 
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>

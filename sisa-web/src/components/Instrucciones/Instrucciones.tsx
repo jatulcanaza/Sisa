@@ -9,7 +9,7 @@ export function Instrucciones() {
                     {/* Texto a la izquierda */}
                     <div className="flex-col justify-between">
                         <div className='mt-4'>
-                        <h1 className='font-bold text-4xl'>Bienvenido a la sección "Crear tu ramo" <br /> <br /> <br /></h1>
+                        <h1 className='font-bold text-4xl text-[#E46585]'>Bienvenido a la sección <br></br>"Crear tu ramo" <br /> <br /> <br /></h1>
                             <h1 className='font-bold'>Sigue estos pasos para crear tu ramo sisa: <br /> <br /> <br /></h1>
                         </div>
                         <div className="mt-2">

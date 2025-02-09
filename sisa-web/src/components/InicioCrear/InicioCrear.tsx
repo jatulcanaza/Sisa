@@ -14,8 +14,8 @@ export function InicioCrear() {
         >
           {/* Contenedor del texto alineado */}
           <div className="absolute inset-0 flex flex-col justify-center items-end px-5 md:px-14 text-white">
-            <h1 className="text-3xl md:text-6xl font-bold leading-tight">
-              Crear tu Ramo
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight">
+              Contemos Historias
             </h1>
 
           </div>
