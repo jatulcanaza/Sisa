@@ -206,8 +206,8 @@ export function Crear() {
 
       {imageUrl && (
         <div className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Imagen generada</h2>
-          <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md" />
+          <h2 className="text-4xl font-semibold text-[#E46585]  mb-4 text-center">Genial, tu ramo Sisa se ha creado con éxito. </h2>
+          <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md mx-auto" />
         </div>
       )}
     </div>
