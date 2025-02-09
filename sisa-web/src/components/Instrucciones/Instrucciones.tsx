@@ -9,13 +9,14 @@ export function Instrucciones() {
                     {/* Texto a la izquierda */}
                     <div className="flex-col justify-between">
                         <div className='mt-4'>
+                        <h1 className='font-bold text-4xl'>Bienvenido a la sección "Crear tu ramo" <br /> <br /> <br /></h1>
                             <h1 className='font-bold'>Sigue estos pasos para crear tu ramo sisa: <br /> <br /> <br /></h1>
                         </div>
                         <div className="mt-2">
                             <p>
-                                1.- Sube una imagen de referencia.<br />
-                                2.- Selecciona las flores y colores que más te gusten.<br />
-                                3.- Visualiza tu diseño único."
+                                1.- Selecciona las flores y colores que más te gusten..<br />
+                                2.- Da click en el botón de "¡Crear tu ramo Sisa!".<br />
+                                3.- Visualiza tu ramo sisa único."
                             </p>
                         </div>
                     </div>
