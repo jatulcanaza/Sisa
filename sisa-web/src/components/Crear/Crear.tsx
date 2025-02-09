@@ -8,8 +8,8 @@ interface FlowerState {
 }
 
 interface QuantityState {
-  girasoles: number;
-  rosas: number;
+  girasoles: number | "Seleccionar";
+  rosas: number | "Seleccionar";
 }
 
 interface ColorState {
@@ -23,16 +23,15 @@ export function Crear() {
     rosas: false,
   });
   const [quantities, setQuantities] = useState<QuantityState>({
-    girasoles: 1,
-    rosas: 1,
+    girasoles: "Seleccionar",
+    rosas: "Seleccionar",
   });
   const [colors, setColors] = useState<ColorState>({
-    girasoles: "Amarillo",
-    rosas: "Blanco",
+    girasoles: "Seleccionar",
+    rosas: "Seleccionar",
   });
   const [imageUrl, setImageUrl] = useState<string>("");
 
-  // Manejo de cambios en los checkboxes de flores
   const handleFlowerChange = (flower: keyof FlowerState) => {
     setSelectedFlowers((prevState) => ({
       ...prevState,
@@ -40,15 +39,13 @@ export function Crear() {
     }));
   };
 
-  // Manejo de cambios en la cantidad de flores
-  const handleQuantityChange = (flower: keyof QuantityState, value: number) => {
+  const handleQuantityChange = (flower: keyof QuantityState, value: string | number) => {
     setQuantities((prevState) => ({
       ...prevState,
       [flower]: value,
     }));
   };
 
-  // Manejo de cambios en el color de flores
   const handleColorChange = (flower: keyof ColorState, value: string) => {
     setColors((prevState) => ({
       ...prevState,
@@ -57,27 +54,24 @@ export function Crear() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Evitar el comportamiento predeterminado de envío del formulario
-  
-    // Obtener los valores de los checkboxes y los selectores de cantidad y color desde el estado
+    e.preventDefault();
     const selectedFlowersList = [];
     if (selectedFlowers.girasoles) selectedFlowersList.push("Girasoles");
     if (selectedFlowers.rosas) selectedFlowersList.push("Rosas");
-  
+
     const quantityGirasoles = quantities.girasoles;
     const quantityRosas = quantities.rosas;
-  
+
     const colorGirasoles = colors.girasoles;
     const colorRosas = colors.rosas;
-  
-    // Cambiar la estructura de data para que coincida con el backend
+
     const data = {
       color_girasoles: colorGirasoles,
       color_rosas: colorRosas,
       cantidad_girasoles: quantityGirasoles,
       cantidad_rosas: quantityRosas,
     };
-  
+
     try {
       const response = await fetch("http://127.0.0.1:8000/upload/", {
         method: "POST",
@@ -86,11 +80,10 @@ export function Crear() {
         },
         body: JSON.stringify(data),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
-        // Mostrar la imagen
-        setImageUrl(result.image_url);  // Asegúrate de que esta es la forma correcta de mostrar la imagen
+        setImageUrl(result.image_url);
       } else {
         console.error("Error al crear el ramo:", result.message);
       }
@@ -98,15 +91,14 @@ export function Crear() {
       console.error("Error al realizar la solicitud:", error);
     }
   };
-  
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+
+  return (<div className="flex flex-col items-center justify-center h-1/2 p-4">
+
       <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo sisa</h1>
 
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Columna de Flores */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Flores</h2>
               <div className="flex items-center mb-4">
@@ -135,38 +127,40 @@ export function Crear() {
               </div>
             </div>
 
-            {/* Columna de Cantidad */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Cantidad</h2>
               <div className="mb-4">
-                <label htmlFor="cantidad-girasoles" className="sr-only">
-                  Cantidad de Girasoles
-                </label>
-                <input
+                <select
                   id="cantidad-girasoles"
-                  type="number"
-                  min="1"
                   value={quantities.girasoles}
-                  onChange={(e) => handleQuantityChange("girasoles", parseInt(e.target.value))}
+                  onChange={(e) => handleQuantityChange("girasoles", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                />
+                >
+                  <option value="Seleccionar">Seleccionar</option>
+                  {[...Array(10).keys()].map((num) => (
+                    <option key={num + 1} value={num + 1}>
+                      {num + 1}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label htmlFor="cantidad-rosas" className="sr-only">
-                  Cantidad de Rosas
-                </label>
-                <input
+                <select
                   id="cantidad-rosas"
-                  type="number"
-                  min="1"
                   value={quantities.rosas}
-                  onChange={(e) => handleQuantityChange("rosas", parseInt(e.target.value))}
+                  onChange={(e) => handleQuantityChange("rosas", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                />
+                >
+                  <option value="Seleccionar">Seleccionar</option>
+                  {[...Array(10).keys()].map((num) => (
+                    <option key={num + 1} value={num + 1}>
+                      {num + 1}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {/* Columna de Color */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Color</h2>
               <div className="mb-4">
@@ -176,6 +170,7 @@ export function Crear() {
                   onChange={(e) => handleColorChange("girasoles", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
                 >
+                  <option value="Seleccionar">Seleccionar</option>
                   <option value="Amarillo">Amarillo</option>
                   <option value="Rojo">Rojo</option>
                   <option value="Blanco">Blanco</option>
@@ -189,6 +184,7 @@ export function Crear() {
                   onChange={(e) => handleColorChange("rosas", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
                 >
+                  <option value="Seleccionar">Seleccionar</option>
                   <option value="Blanco">Blanco</option>
                   <option value="Rosa">Rosa</option>
                   <option value="Amarillo">Amarillo</option>
