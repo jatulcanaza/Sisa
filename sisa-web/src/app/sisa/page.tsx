@@ -1,3 +1,4 @@
+import { Contactenos } from "@/components/Contactenos";
 import { InicioSisa } from "@/components/InicioSisa";
 import { Navbar } from "@/components/Navbar";
 
@@ -6,6 +7,7 @@ export default function sisa() {
    <main>
     <Navbar />
     <InicioSisa />
+    <Contactenos />
    </main>
   )
 }
