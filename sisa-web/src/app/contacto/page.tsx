@@ -1,11 +1,11 @@
-import { Contactenos } from "@/components/Contactenos";
 import { Navbar } from "@/components/Navbar";
+import { PagContacto } from "@/components/PagContacto";
 
 export default function contacto() {
   return (
     <main>
     <Navbar />
-    <Contactenos />
+    <PagContacto />
     </main>
   )
 }
