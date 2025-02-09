@@ -6,7 +6,7 @@ export function InicioNosotros() {
         <div
           className="relative bg-cover bg-no-repeat rounded-lg"
           style={{
-            backgroundImage: 'url(/assets/Sisa.png)',
+            backgroundImage: 'url(/assets/Nosotros.jpg)',
             backgroundPosition: 'top', // Centra la imagen en todos los tamaños
             backgroundSize: 'cover',      // La imagen cubre todo el contenedor
             height: '50vh',               // Ajusta la altura del contenedor

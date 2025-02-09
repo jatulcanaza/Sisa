@@ -1,12 +1,12 @@
 import { Crear } from "@/components/Crear";
-import { Inicio } from "@/components/Inicio";
+import { InicioCrear } from "@/components/InicioCrear";
 import { Instrucciones } from "@/components/Instrucciones";
 import { Navbar } from "@/components/Navbar";
 export default function crear_ramo() {
     return (
         <main>
             <Navbar />
-            <Inicio />
+            <InicioCrear />
             <Instrucciones />
             <Crear />
         </main>

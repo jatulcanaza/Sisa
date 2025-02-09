@@ -22,9 +22,9 @@ export function Instrucciones() {
                     </div>
 
                     {/* Imagen a la derecha */}
-                    <div className="relative h-64 md:h-80">
+                    <div className="relative h-94 md:h-80">
                         <Image
-                            src="/assets/flores-a-domicilio-para-Navidad.jpg" // Reemplaza con la ruta de tu imagen
+                            src="/assets/instrucciones.jpg" // Reemplaza con la ruta de tu imagen
                             alt="Imagen descriptiva"
                             layout="fill"
                             objectFit="cover"
