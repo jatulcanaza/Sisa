@@ -1,55 +1,111 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+
+interface FlowerState {
+  girasoles: boolean;
+  rosas: boolean;
+}
+
+interface QuantityState {
+  girasoles: number;
+  rosas: number;
+}
+
+interface ColorState {
+  girasoles: string;
+  rosas: string;
+}
 
 export function Crear() {
-  const [preview, setPreview] = useState("/assets/foto.png"); // Imagen inicial
+  const [selectedFlowers, setSelectedFlowers] = useState<FlowerState>({
+    girasoles: false,
+    rosas: false,
+  });
+  const [quantities, setQuantities] = useState<QuantityState>({
+    girasoles: 1,
+    rosas: 1,
+  });
+  const [colors, setColors] = useState<ColorState>({
+    girasoles: "Amarillo",
+    rosas: "Blanco",
+  });
+  const [imageUrl, setImageUrl] = useState<string>("");
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Usa optional chaining por si files es null
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setPreview(reader.result as string); // Asegura que reader.result sea tratado como string
-      reader.readAsDataURL(file);
+  // Manejo de cambios en los checkboxes de flores
+  const handleFlowerChange = (flower: keyof FlowerState) => {
+    setSelectedFlowers((prevState) => ({
+      ...prevState,
+      [flower]: !prevState[flower],
+    }));
+  };
+
+  // Manejo de cambios en la cantidad de flores
+  const handleQuantityChange = (flower: keyof QuantityState, value: number) => {
+    setQuantities((prevState) => ({
+      ...prevState,
+      [flower]: value,
+    }));
+  };
+
+  // Manejo de cambios en el color de flores
+  const handleColorChange = (flower: keyof ColorState, value: string) => {
+    setColors((prevState) => ({
+      ...prevState,
+      [flower]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Evitar el comportamiento predeterminado de envío del formulario
+  
+    // Obtener los valores de los checkboxes y los selectores de cantidad y color desde el estado
+    const selectedFlowersList = [];
+    if (selectedFlowers.girasoles) selectedFlowersList.push("Girasoles");
+    if (selectedFlowers.rosas) selectedFlowersList.push("Rosas");
+  
+    const quantityGirasoles = quantities.girasoles;
+    const quantityRosas = quantities.rosas;
+  
+    const colorGirasoles = colors.girasoles;
+    const colorRosas = colors.rosas;
+  
+    // Cambiar la estructura de data para que coincida con el backend
+    const data = {
+      color_girasoles: colorGirasoles,
+      color_rosas: colorRosas,
+      cantidad_girasoles: quantityGirasoles,
+      cantidad_rosas: quantityRosas,
+    };
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/upload/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      const result = await response.json();
+      if (response.ok) {
+        // Mostrar la imagen
+        setImageUrl(result.image_url);  // Asegúrate de que esta es la forma correcta de mostrar la imagen
+      } else {
+        console.error("Error al crear el ramo:", result.message);
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
     }
   };
   
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      {/* Título */}
       <h1 className="text-2xl font-bold text-center mb-6">Crea tu ramo sisa</h1>
 
-      {/* Contenedor principal */}
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Columna izquierda: Imagen */}
-          <div className="flex flex-col items-center">
-            <label
-              htmlFor="upload-image"
-              className="flex items-center justify-center w-48 h-48 rounded-lg cursor-pointer overflow-hidden"
-            >
-              <Image
-                src={preview}
-                alt="Imagen de referencia"
-                width={192}
-                height={192}
-                className="object-cover"
-              />
-            </label>
-            <input
-              id="upload-image"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-            <p className="mt-4 text-sm font-medium text-gray-700">Ingresa la imagen de referencia</p>
-          </div>
-
-          {/* Columna derecha: Opciones */}
-          <div className="grid grid-cols-3 gap-4">
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Columna de Flores */}
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Flores</h2>
@@ -58,16 +114,24 @@ export function Crear() {
                   type="checkbox"
                   id="girasoles"
                   className="mr-2 w-4 h-4 text-rose-500 border-gray-300 rounded mt-1"
+                  checked={selectedFlowers.girasoles}
+                  onChange={() => handleFlowerChange("girasoles")}
                 />
-                <label htmlFor="girasoles" className="text-sm text-gray-700 mt-1">Girasoles</label>
+                <label htmlFor="girasoles" className="text-sm text-gray-700 mt-1">
+                  Girasoles
+                </label>
               </div>
               <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="rosas"
-                  className="mr-2 w-4 h-4 text-rose-500 border-gray-300 rounded mt-5"
+                  className="mr-2 w-4 h-4 text-rose-500 border-gray-300 rounded mt-1"
+                  checked={selectedFlowers.rosas}
+                  onChange={() => handleFlowerChange("rosas")}
                 />
-                <label htmlFor="rosas" className="text-sm text-gray-700 mt-5">Rosas</label>
+                <label htmlFor="rosas" className="text-sm text-gray-700 mt-1">
+                  Rosas
+                </label>
               </div>
             </div>
 
@@ -78,35 +142,27 @@ export function Crear() {
                 <label htmlFor="cantidad-girasoles" className="sr-only">
                   Cantidad de Girasoles
                 </label>
-                <select
+                <input
                   id="cantidad-girasoles"
+                  type="number"
+                  min="1"
+                  value={quantities.girasoles}
+                  onChange={(e) => handleQuantityChange("girasoles", parseInt(e.target.value))}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Seleccionar
-                  </option>
-                  {[...Array(10).keys()].map((n) => (
-                    <option key={n + 1} value={n + 1}>{n + 1}</option>
-                  ))}
-                </select>
+                />
               </div>
               <div>
                 <label htmlFor="cantidad-rosas" className="sr-only">
                   Cantidad de Rosas
                 </label>
-                <select
+                <input
                   id="cantidad-rosas"
+                  type="number"
+                  min="1"
+                  value={quantities.rosas}
+                  onChange={(e) => handleQuantityChange("rosas", parseInt(e.target.value))}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Seleccionar
-                  </option>
-                  {[...Array(10).keys()].map((n) => (
-                    <option key={n + 1} value={n + 1}>{n + 1}</option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
 
@@ -114,15 +170,12 @@ export function Crear() {
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Color</h2>
               <div className="mb-4">
-                <label htmlFor="color-girasoles" className="sr-only">
-                  Color de Girasoles
-                </label>
                 <select
                   id="color-girasoles"
+                  value={colors.girasoles}
+                  onChange={(e) => handleColorChange("girasoles", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                  defaultValue=""
                 >
-                  <option value="" disabled>Seleccionar</option>
                   <option value="Amarillo">Amarillo</option>
                   <option value="Rojo">Rojo</option>
                   <option value="Blanco">Blanco</option>
@@ -130,15 +183,12 @@ export function Crear() {
                 </select>
               </div>
               <div>
-                <label htmlFor="color-rosas" className="sr-only">
-                  Color de Rosas
-                </label>
                 <select
                   id="color-rosas"
+                  value={colors.rosas}
+                  onChange={(e) => handleColorChange("rosas", e.target.value)}
                   className="w-full border-gray-300 rounded-md text-sm text-gray-700 p-2"
-                  defaultValue=""
                 >
-                  <option value="" disabled>Seleccionar</option>
                   <option value="Blanco">Blanco</option>
                   <option value="Rosa">Rosa</option>
                   <option value="Amarillo">Amarillo</option>
@@ -146,17 +196,24 @@ export function Crear() {
               </div>
             </div>
           </div>
-        </div>
+
+          <div className="mt-6">
+            <button
+              type="submit"
+              className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
+            >
+              ¡Crea tu ramo Sisa!
+            </button>
+          </div>
+        </form>
       </div>
 
-      {/* Botón de acción */}
-      <div className="mt-6">
-        <button
-          className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
-        >
-          ¡Crea tu ramo Sisa!
-        </button>
-      </div>
+      {imageUrl && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Imagen generada</h2>
+          <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md" />
+        </div>
+      )}
     </div>
   );
 }
