@@ -3,15 +3,15 @@ import Link from 'next/link';
 
 export function Navbar() {
   return (
-    <div className="bg-[#FB6F92] fixed w-full top-0 z-50"> 
+    <div className="bg-[#FB6F92] fixed w-full top-0 z-50 py-6"> 
       <div className="container mx-auto flex items-center justify-between px-4 md:px-20">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Image 
-            src="/assets/LOGO_SISA.png" 
+            src="/assets/LOGO_SISA1.png" 
             alt="Sisa Logo" 
-            width={120}  // Reduce el tamaño para un diseño más compacto
-            height={120} 
+            width={190}  // Reduce el tamaño para un diseño más compacto
+            height={190} 
           />
         </div>
         {/* Enlaces */}

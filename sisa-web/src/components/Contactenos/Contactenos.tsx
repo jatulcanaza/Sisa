@@ -52,8 +52,8 @@ export function Contactenos() {
   };
 
   return (
-    <div id="Contactenos" className="py-20 bg-[#FFF4F7]">
-      <div className="container mx-auto px-4">
+    <div id="Contactenos" className="py-20 bg-[#FFF4F7] my-20">
+      <div className="container mx-auto px-6">
         <h2 className="text-3xl font-bold text-[#FB6F92]">Quiero que me contacten</h2>
         <p className="mt-4">Déjanos tus datos y te contactaremos en el menor tiempo posible.</p>
 
