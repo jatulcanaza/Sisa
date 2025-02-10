@@ -125,11 +125,38 @@ export function Crear() {
       setLoading(false); // Desactivar la animación de carga una vez que se haya recibido la respuesta
     }
   };
+  const handleDelete = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/delete/", { method: "DELETE" });
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+        setImageUrl(""); // Limpia la imagen mostrada
+        setSelectedFlowers({ girasoles: false, rosas: false }); // Resetea las flores seleccionadas
+        setQuantities({ girasoles: "Seleccionar", rosas: "Seleccionar" }); // Resetea la cantidad
+        setColors({ girasoles: "Seleccionar", rosas: "Seleccionar" }); // Resetea el color
+      } else {
+        alert("Error al eliminar la imagen: " + result.detail);
+      }
+    } catch (error) {
+      console.error("Error al eliminar la imagen:", error);
+      alert("No se pudo eliminar la imagen. Intenta más tarde.");
+    }
+  };
+  // Manejar guardar en carpeta local (ejemplo si integras lógica backend)
+  const handleDownload = () => {
+    window.open("http://localhost:8000/download/", "_blank");
+  };
+  
+  const handleEdit = () => {
+    setImageUrl(""); // Limpia la imagen
+  };
+
 
   return (
     <div className="flex flex-col items-center justify-center h-1/2 p-4">
       <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo Sisa</h1>
-  
+
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,7 +188,7 @@ export function Crear() {
               </div>
               {errors.flowers && <p className="text-red-500 text-sm">{errors.flowers}</p>}
             </div>
-  
+
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Cantidad</h2>
               <div className="mb-4">
@@ -197,7 +224,7 @@ export function Crear() {
                 {errors.rosasCantidad && <p className="text-red-500 text-sm">{errors.rosasCantidad}</p>}
               </div>
             </div>
-  
+
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Color</h2>
               <div className="mb-4">
@@ -231,7 +258,7 @@ export function Crear() {
               </div>
             </div>
           </div>
-  
+
           <div className="mt-6">
             <button
               type="submit"
@@ -242,10 +269,10 @@ export function Crear() {
             </button>
           </div>
         </form>
-  
+
         {backendError && <p className="text-red-500 text-sm mt-4">{backendError}</p>}
       </div>
-  
+
       {loading && (
         <div className="mt-6">
           <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Generando tu ramo</h2>
@@ -256,14 +283,45 @@ export function Crear() {
           />
         </div>
       )}
-  
+
       {imageUrl && !loading && (
         <div className="mt-6">
-          <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Genial, tu ramo Sisa se ha creado con éxito.</h2>
+          <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">
+            Genial, tu ramo Sisa se ha creado con éxito.
+          </h2>
           <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md mx-auto" />
+
+          {/* Botones para acciones debajo de la imagen */}
+          <div className="flex justify-center mt-4 space-x-4">
+
+            {/* Botón Descargar */}
+            <button
+              onClick={handleDownload}
+              className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
+            >
+              Descargar
+            </button>
+
+
+            {/* Botón Eliminar */}
+            <button
+              onClick={handleDelete}
+              className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
+            >
+              Eliminar o Crear Nuevo
+            </button>
+
+            {/* Botón Editar */}
+            <button
+              onClick={handleEdit}
+              className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
-  
+
 }
