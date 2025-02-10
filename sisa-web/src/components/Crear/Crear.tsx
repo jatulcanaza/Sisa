@@ -33,6 +33,8 @@ export function Crear() {
   });
   const [imageUrl, setImageUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false); // Estado para controlar la animación de carga
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [backendError, setBackendError] = useState<string | null>(null);
 
   const handleFlowerChange = (flower: keyof FlowerState) => {
     setSelectedFlowers((prevState) => ({
@@ -57,24 +59,48 @@ export function Crear() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const selectedFlowersList = [];
-    if (selectedFlowers.girasoles) selectedFlowersList.push("Girasoles");
-    if (selectedFlowers.rosas) selectedFlowersList.push("Rosas");
+    let newErrors: { [key: string]: string } = {};
 
-    const quantityGirasoles = quantities.girasoles;
-    const quantityRosas = quantities.rosas;
+    // Validaciones
+    if (!selectedFlowers.girasoles && !selectedFlowers.rosas) {
+      newErrors.flowers = "Debes seleccionar al menos una flor.";
+    }
 
-    const colorGirasoles = colors.girasoles;
-    const colorRosas = colors.rosas;
+    // Validaciones para girasoles
+    if (selectedFlowers.girasoles) {
+      if (quantities.girasoles === "Seleccionar") {
+        newErrors.girasolesCantidad = "Debes seleccionar la cantidad de los girasoles.";
+      }
+      if (colors.girasoles === "Seleccionar") {
+        newErrors.girasolesColor = "Debes seleccionar el color de los girasoles.";
+      }
+    }
 
+    // Validaciones para rosas
+    if (selectedFlowers.rosas) {
+      if (quantities.rosas === "Seleccionar") {
+        newErrors.rosasCantidad = "Debes seleccionar la cantidad de las rosas.";
+      }
+      if (colors.rosas === "Seleccionar") {
+        newErrors.rosasColor = "Debes seleccionar el color de las rosas.";
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Crear el objeto data para enviar al backend
     const data = {
-      color_girasoles: colorGirasoles,
-      color_rosas: colorRosas,
-      cantidad_girasoles: quantityGirasoles,
-      cantidad_rosas: quantityRosas,
+      color_girasoles: colors.girasoles,
+      color_rosas: colors.rosas,
+      cantidad_girasoles: quantities.girasoles !== "Seleccionar" ? quantities.girasoles : 0,
+      cantidad_rosas: quantities.rosas !== "Seleccionar" ? quantities.rosas : 0,
     };
 
     setLoading(true); // Activar la animación de carga
+    setBackendError(null); // Resetear el error del backend
 
     try {
       const response = await fetch("http://127.0.0.1:8000/upload/", {
@@ -90,9 +116,11 @@ export function Crear() {
         setImageUrl(result.image_url);
       } else {
         console.error("Error al crear el ramo:", result.message);
+        setBackendError("Hubo un error al generar tu ramo. Intenta de nuevo más tarde.");
       }
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
+      setBackendError("Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.");
     } finally {
       setLoading(false); // Desactivar la animación de carga una vez que se haya recibido la respuesta
     }
@@ -100,8 +128,8 @@ export function Crear() {
 
   return (
     <div className="flex flex-col items-center justify-center h-1/2 p-4">
-      <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo sisa</h1>
-
+      <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo Sisa</h1>
+  
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -131,8 +159,9 @@ export function Crear() {
                   Rosas
                 </label>
               </div>
+              {errors.flowers && <p className="text-red-500 text-sm">{errors.flowers}</p>}
             </div>
-
+  
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Cantidad</h2>
               <div className="mb-4">
@@ -149,6 +178,7 @@ export function Crear() {
                     </option>
                   ))}
                 </select>
+                {errors.girasolesCantidad && <p className="text-red-500 text-sm">{errors.girasolesCantidad}</p>}
               </div>
               <div>
                 <select
@@ -164,9 +194,10 @@ export function Crear() {
                     </option>
                   ))}
                 </select>
+                {errors.rosasCantidad && <p className="text-red-500 text-sm">{errors.rosasCantidad}</p>}
               </div>
             </div>
-
+  
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-2">Color</h2>
               <div className="mb-4">
@@ -182,6 +213,7 @@ export function Crear() {
                   <option value="Blanco">Blanco</option>
                   <option value="Rosa">Rosa</option>
                 </select>
+                {errors.girasolesColor && <p className="text-red-500 text-sm">{errors.girasolesColor}</p>}
               </div>
               <div>
                 <select
@@ -195,21 +227,25 @@ export function Crear() {
                   <option value="Rosa">Rosa</option>
                   <option value="Amarillo">Amarillo</option>
                 </select>
+                {errors.rosasColor && <p className="text-red-500 text-sm">{errors.rosasColor}</p>}
               </div>
             </div>
           </div>
-
+  
           <div className="mt-6">
             <button
               type="submit"
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
+              disabled={loading}
             >
               ¡Crea tu ramo Sisa!
             </button>
           </div>
         </form>
+  
+        {backendError && <p className="text-red-500 text-sm mt-4">{backendError}</p>}
       </div>
-
+  
       {loading && (
         <div className="mt-6">
           <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Generando tu ramo</h2>
@@ -220,7 +256,7 @@ export function Crear() {
           />
         </div>
       )}
-
+  
       {imageUrl && !loading && (
         <div className="mt-6">
           <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Genial, tu ramo Sisa se ha creado con éxito.</h2>
@@ -229,4 +265,5 @@ export function Crear() {
       )}
     </div>
   );
+  
 }
