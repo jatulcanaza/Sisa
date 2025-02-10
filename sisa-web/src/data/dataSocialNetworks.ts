@@ -23,4 +23,10 @@ export const dataSocialNetworks = [
         icon: "Whatsapp",
         link: "http://www.whatsapp.com",
     },
+    {
+        id: 5,
+        name: "Github",
+        icon: "github",
+        link: "https://github.com/jatulcanaza/Sisa",
+    },
 ];

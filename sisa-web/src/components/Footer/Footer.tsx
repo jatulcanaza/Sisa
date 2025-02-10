@@ -9,8 +9,8 @@ export function Footer() {
             <div className="p-5 mt-10 text-[#E46585] bg-[#FFF4F7] md:px-20 md:py-10">
                 {/* Grid adaptado para pantallas pequeñas y grandes */}
                 <div className="grid grid-cols-1 md:grid-cols-[350px_1fr_1fr_1fr] md:gap-10">
-                    <div>
-                        <img src="/assets/LOGO_SISA(ROSA).png" alt="Logo Website" className="w-24 md:w-48" />
+                    <div >
+                        <img src="/assets/LOGO_SISA(ROSA).png" alt="Logo Website" className="w-34 md:w-18 mx-auto ml-[-40px]" />
                         <div className="flex gap-x-4 mt-4 justify-center md:justify-start">
                             {dataSocialNetworks.map(({ id, icon, name, link }) => (
                                 <Link href={link} key={id} target="_blank" rel="noreferrer">
@@ -67,7 +67,8 @@ export function Footer() {
 
                     <div className="my-3">
                         <h4 className="text-xl font-bold text-[#E46585]">Contacto</h4>
-                        <p className="my-4">(+593) 987017524</p>
+                        <p className="my-4">(+593) 987  007 549</p>
+                        <p className="my-4">(+593) 967  107 449</p>
                     </div>
                 </div>
             </div>

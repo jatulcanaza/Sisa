@@ -16,11 +16,11 @@ export function Navbar() {
         </div>
         {/* Enlaces */}
         <div className="flex gap-4 text-sm md:text-base text-white">
-          <Link href="/inicio" className="hover:text-gray-300">Inicio</Link>
-          <Link href="/nosotros" className="hover:text-gray-300">Nosotros</Link>
-          <Link href="/crear_ramo" className="hover:text-gray-300">Crear tu ramo</Link>
-          <Link href="/sisa" className="hover:text-gray-300">Sisa</Link>
-          <Link href="/contacto" className="hover:text-gray-300">Contáctenos</Link>
+          <Link href="/inicio" className="hover:text-gray-300 hover:underline">Inicio</Link>
+          <Link href="/nosotros" className="hover:text-gray-300 hover:underline">Nosotros</Link>
+          <Link href="/crear_ramo" className="hover:text-gray-300 hover:underline">Crear tu ramo</Link>
+          <Link href="/sisa" className="hover:text-gray-300 hover:underline">Sisa</Link>
+          <Link href="/contacto" className="hover:text-gray-300 hover:underline">Contáctenos</Link>
 
         </div>
       </div>
