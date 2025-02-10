@@ -1,76 +1,69 @@
 "use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export function Contactenos() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    reason: '',
+    name: "",
+    email: "",
+    subject: "",
+    reason: "",
   });
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    reason: '',
-  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const validateForm = () => {
-    let formErrors = { name: '', email: '', reason: '' };
-    let isValid = true;
-
-    // Validar nombre
-    if (!formData.name) {
-      formErrors.name = 'El nombre es obligatorio.';
-      isValid = false;
-    }
-
-    // Validar email
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!formData.email) {
-      formErrors.email = 'El correo electrónico es obligatorio.';
-    } else if (!emailPattern.test(formData.email)) {
-      formErrors.email = 'Por favor ingresa un correo electrónico válido.';
-      isValid = false;
-    }
-
-    // Validar motivo
-    if (!formData.reason) {
-      formErrors.reason = 'El motivo es obligatorio.';
-      isValid = false;
-    }
-
-    setErrors(formErrors);
-    return isValid;
-  };
-
   const handleClear = () => {
-    setFormData({ name: '', email: '', reason: '' });
-    setErrors({ name: '', email: '', reason: '' });
+    setFormData({ name: "", email: "", subject: "", reason: "" });
+    setIsSubmitted(false);
   };
 
-  const handleSubmit = async () => {
-    if (validateForm()) {
-      setIsSubmitting(true);
-      console.log('Datos enviados:', formData);
-      // Aquí puedes integrar la lógica para enviar los datos a una base de datos.
-      // Después de enviar, restablece el formulario.
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formUrl = "https://formsubmit.co/ajax/tulcanazajuan6@gmail.com";
+
+    try {
+      const response = await fetch(formUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", subject: "", reason: "" });
+
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } else {
+        console.error("Error al enviar el formulario");
+      }
+    } catch (error) {
+      console.error("Error de red:", error);
+    } finally {
       setIsSubmitting(false);
-      setFormData({ name: '', email: '', reason: '' });
     }
   };
 
   return (
     <div id="Contactenos" className="py-20 bg-[#FFF4F7]">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold">Quiero que me contacten</h2>
+        <h2 className="text-3xl font-bold text-[#FB6F92]">Quiero que me contacten</h2>
         <p className="mt-4">Déjanos tus datos y te contactaremos en el menor tiempo posible.</p>
 
-        <div className="mt-8 flex flex-col gap-4">
+        {isSubmitted && (
+          <div className="mt-4 text-center">
+            <p className="text-[#FB6F92] font-semibold">Mensaje enviado con éxito, te escribiremos enseguida.</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
           {/* Nombre */}
           <div className="flex items-center">
             <label htmlFor="name" className="w-1/4 font-bold">
@@ -82,10 +75,13 @@ export function Contactenos() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full p-4 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+              onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa tu nombre.")}
+              onInput={(e) => e.currentTarget.setCustomValidity("")}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
               placeholder="Ingresa tu nombre completo"
+              required
             />
-            {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
+
           </div>
 
           {/* Email */}
@@ -99,30 +95,53 @@ export function Contactenos() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full p-4 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+              onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa un email válido '@'.")}
+              onInput={(e) => e.currentTarget.setCustomValidity("")}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
               placeholder="Ingresa tu email"
+              required
             />
-            {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
           </div>
 
-          {/* Motivo */}
+          {/* Asunto */}
+          <div className="flex items-center">
+            <label htmlFor="subject" className="w-1/4 font-bold">
+              Asunto:
+            </label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa tu asunto.")}
+              onInput={(e) => e.currentTarget.setCustomValidity("")}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
+              placeholder="Escribe el asunto"
+              required
+            />
+          </div>
+
+          {/* Mensaje */}
           <div className="flex items-center">
             <label htmlFor="reason" className="w-1/4 font-bold">
-              Motivo:
+              Mensaje:
             </label>
             <textarea
               id="reason"
               name="reason"
               value={formData.reason}
               onChange={handleChange}
-              className={`w-full p-4 border ${errors.reason ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+              onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa tu mensaje.")}
+              onInput={(e) => e.currentTarget.setCustomValidity("")}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
               placeholder="¿Por qué deseas contactarnos?"
+              required
             />
-            {errors.reason && <p className="text-red-500 text-sm mt-2">{errors.reason}</p>}
           </div>
 
           {/* Botones */}
-          <div className="flex justify-end gap-4 mt-4">
+          <div className="flex justify-end mt-4 gap-4">
             <button
               type="button"
               onClick={handleClear}
@@ -131,15 +150,15 @@ export function Contactenos() {
               Eliminar
             </button>
             <button
-              type="button"
-              onClick={handleSubmit}
+              type="submit"
+              className={`px-8 py-3 bg-[#FB6F92] text-white rounded-xl hover:bg-[#E46585] focus:outline-none ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               disabled={isSubmitting}
-              className={`px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585] focus:outline-none ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar'}
+              {isSubmitting ? "Enviando..." : "Enviar"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
