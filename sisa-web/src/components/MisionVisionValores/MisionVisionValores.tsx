@@ -140,7 +140,7 @@ export function MisionVisionValores() {
             </div>
 
             {/* Rectángulo adicional fuera de todo el contenido */}
-            <section className="pt-14 bg-[#ffffff] w-full my-1"></section>
+            <section className="pt-4 bg-[#ffffff] w-full my-1"></section>
         </>
     );
 }
