@@ -82,7 +82,8 @@ async def generate_flower_image(data: FlowerRequest):
             "height": 512,
             "modelId": "1e60896f-3c26-4296-8ecc-53e2afecc132",
             "prompt": prompt,
-            "width": 512
+            "width": 512,
+            "num_images": 1
         }
 
         response = requests.post(generation_url, json=payload, headers=leonardo_headers)
