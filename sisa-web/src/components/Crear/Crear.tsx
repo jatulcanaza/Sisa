@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react"; // Importa la animación Lottie
 
 interface FlowerState {
   girasoles: boolean;
@@ -31,6 +32,7 @@ export function Crear() {
     rosas: "Seleccionar",
   });
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // Estado para controlar la animación de carga
 
   const handleFlowerChange = (flower: keyof FlowerState) => {
     setSelectedFlowers((prevState) => ({
@@ -72,6 +74,8 @@ export function Crear() {
       cantidad_rosas: quantityRosas,
     };
 
+    setLoading(true); // Activar la animación de carga
+
     try {
       const response = await fetch("http://127.0.0.1:8000/upload/", {
         method: "POST",
@@ -89,11 +93,13 @@ export function Crear() {
       }
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
+    } finally {
+      setLoading(false); // Desactivar la animación de carga una vez que se haya recibido la respuesta
     }
   };
 
-  return (<div className="flex flex-col items-center justify-center h-1/2 p-4">
-
+  return (
+    <div className="flex flex-col items-center justify-center h-1/2 p-4">
       <h1 className="text-4xl font-bold text-center mb-6 text-[#E46585]">Crea tu ramo sisa</h1>
 
       <div className="w-full max-w-4xl bg-[#FFF4F7] p-7 rounded-lg shadow-lg">
@@ -204,9 +210,20 @@ export function Crear() {
         </form>
       </div>
 
-      {imageUrl && (
+      {loading && (
         <div className="mt-6">
-          <h2 className="text-4xl font-semibold text-[#E46585]  mb-4 text-center">Genial, tu ramo Sisa se ha creado con éxito. </h2>
+          <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Generando tu ramo</h2>
+          <DotLottieReact
+            src="https://lottie.host/982b0727-7b73-4699-8e85-5ef930a85c8e/30pNoU1zT2.lottie"
+            loop
+            autoplay
+          />
+        </div>
+      )}
+
+      {imageUrl && !loading && (
+        <div className="mt-6">
+          <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Genial, tu ramo Sisa se ha creado con éxito.</h2>
           <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md mx-auto" />
         </div>
       )}
