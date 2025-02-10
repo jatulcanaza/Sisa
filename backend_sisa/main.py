@@ -95,11 +95,15 @@ async def generate_flower_image(data: FlowerRequest):
             raise Exception("No se encontró 'generationId' en la respuesta.")
 
         # Paso 2: Esperar y obtener la imagen generada
-        # Puedes optimizar la espera aquí con más lógica si es necesario
-        time.sleep(30)
-
         result_url = f"https://cloud.leonardo.ai/api/rest/v1/generations/{generation_id}"
-        response = requests.get(result_url, headers=leonardo_headers)
+        
+        while True:
+            response = requests.get(result_url, headers=leonardo_headers)
+            if response.status_code == 200:
+                generated_images = response.json().get("generations_by_pk", {}).get("generated_images", [])
+                if generated_images:
+                    break  # Imagen lista
+            time.sleep(5)  # Espera 5 segundos antes de volver a verificar
 
         if response.status_code == 200:
             generated_images = response.json().get("generations_by_pk", {}).get("generated_images", [])
@@ -109,7 +113,12 @@ async def generate_flower_image(data: FlowerRequest):
                 # Descargar la imagen generada
                 generated_image_response = requests.get(image_url)
                 if generated_image_response.status_code == 200:
-                    generated_image_path = "generated_image.jpg"
+                    # Ruta completa para guardar la imagen
+                    generated_image_path = r"C:\Users\MyVICTUS\Desktop\Proyecto\backend\images\generated_image.jpg"
+
+                    # Crear la carpeta si no existe
+                    os.makedirs(os.path.dirname(generated_image_path), exist_ok=True)
+
                     with open(generated_image_path, "wb") as f:
                         f.write(generated_image_response.content)
 
