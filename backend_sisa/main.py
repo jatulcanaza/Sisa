@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from b2sdk.v2 import InMemoryAccountInfo, B2Api
 from pydantic import BaseModel
 
@@ -150,3 +151,29 @@ async def generate_flower_image(data: FlowerRequest):
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": f"Error interno: {str(e)}"})
+@app.delete("/delete/")
+def delete_image():
+    try:
+        image_path = r"C:\Users\MyVICTUS\Desktop\Proyecto\backend\images\generated_image.jpg"
+        if os.path.exists(image_path):
+            os.remove(image_path)
+            return {"message": "Imagen eliminada exitosamente."}
+        else:
+            raise HTTPException(status_code=404, detail="Imagen no encontrada.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al eliminar la imagen: {str(e)}")
+
+@app.get("/download/")
+def download_image():
+    image_path = r"C:\Users\MyVICTUS\Desktop\Proyecto\backend\images\generated_image.jpg"
+    
+    if os.path.exists(image_path):
+        # Agregar encabezado para forzar descarga
+        return FileResponse(
+            image_path, 
+            media_type="image/jpeg", 
+            filename="ramo_flores.jpg",
+            headers={"Content-Disposition": "attachment"}
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Imagen no encontrada.")
