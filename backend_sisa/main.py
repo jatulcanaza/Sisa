@@ -48,7 +48,7 @@ class FlowerRequest(BaseModel):
     color_girasoles: str
     color_rosas: str
     cantidad_girasoles: int
-    cantidad_rosas: int 
+    cantidad_rosas: int
 
 @app.get("/")
 def read_root():
@@ -62,9 +62,17 @@ async def generate_flower_image(data: FlowerRequest):
     cantidad_girasoles = data.cantidad_girasoles
     cantidad_rosas = data.cantidad_rosas
 
-    # Validación de los parámetros
+    # Validación de que al menos una flor debe ser seleccionada
     if cantidad_girasoles <= 0 and cantidad_rosas <= 0:
         raise HTTPException(status_code=400, detail="Debe seleccionar al menos una flor.")
+
+    # Validación de que si la cantidad de flores es mayor a 0, debe estar seleccionado un color
+    if cantidad_girasoles > 0 and not color_girasoles:
+        raise HTTPException(status_code=400, detail="Debes seleccionar el color de los girasoles.")
+    if cantidad_rosas > 0 and not color_rosas:
+        raise HTTPException(status_code=400, detail="Debes seleccionar el color de las rosas.")
+    
+    
     
     # Generar el mensaje de prompt
     prompt = "Ramo de flores con"
@@ -74,6 +82,7 @@ async def generate_flower_image(data: FlowerRequest):
         if cantidad_girasoles > 0:
             prompt += " y"
         prompt += f" {cantidad_rosas} rosas de color {color_rosas}" if color_rosas else f" {cantidad_rosas} rosas"
+
     
     try:
         # Paso 1: Generar imagen con Leonardo AI
