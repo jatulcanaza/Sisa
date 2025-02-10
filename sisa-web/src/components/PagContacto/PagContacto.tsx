@@ -5,58 +5,44 @@ export function PagContacto() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        message: '',
-    });
-
-    const [errors, setErrors] = useState({
-        name: '',
-        email: '',
+        subject: '',  // Campo para asunto
         message: '',
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false); // Para mostrar el mensaje de éxito
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const validateForm = () => {
-        let formErrors = { name: '', email: '', message: '' };
-        let isValid = true;
-
-        // Validar nombre
-        if (!formData.name) {
-            formErrors.name = 'El nombre es obligatorio.';
-            isValid = false;
-        }
-
-        // Validar email
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!formData.email) {
-            formErrors.email = 'El correo electrónico es obligatorio.';
-        } else if (!emailPattern.test(formData.email)) {
-            formErrors.email = 'Por favor ingresa un correo electrónico válido.';
-            isValid = false;
-        }
-
-        // Validar mensaje
-        if (!formData.message) {
-            formErrors.message = 'El mensaje es obligatorio.';
-            isValid = false;
-        }
-
-        setErrors(formErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (validateForm()) {
-            setIsSubmitting(true);
-            console.log('Datos enviados:', formData);
-            // Aquí puedes integrar la lógica para enviar los datos a una base de datos.
+
+        setIsSubmitting(true);
+
+        const formUrl = "https://formsubmit.co/ajax/tulcanazajuan6@gmail.com"; // URL de FormSubmit
+
+        try {
+            const response = await fetch(formUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                setIsSubmitted(true);
+                setFormData({ name: '', email: '', subject: '', message: '' }); // Limpiar formulario
+                setTimeout(() => setIsSubmitted(false), 5000); // Mostrar mensaje por 5 segundos
+            } else {
+                console.error("Error al enviar el formulario");
+            }
+        } catch (error) {
+            console.error("Error de red:", error);
+        } finally {
             setIsSubmitting(false);
-            setFormData({ name: '', email: '', message: '' });
         }
     };
 
@@ -66,6 +52,11 @@ export function PagContacto() {
                 {/* Formulario */}
                 <div>
                     <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Contáctanos</h2>
+                    {isSubmitted && (
+                        <div className="mb-4 text-center">
+                            <p className="text-[#FB6F92] font-semibold">¡Mensaje enviado con éxito!</p>
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Nombre */}
                         <div>
@@ -75,9 +66,11 @@ export function PagContacto() {
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="Nombre"
-                                className={`w-full p-4 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
+                                required
+                                onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa tu nombre.")}
+                                onInput={(e) => e.currentTarget.setCustomValidity("")}
                             />
-                            {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
                         </div>
 
                         {/* Correo electrónico */}
@@ -88,9 +81,26 @@ export function PagContacto() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="Correo electrónico"
-                                className={`w-full p-4 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
+                                required
+                                onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa un correo electrónico válido '@'.")}
+                                onInput={(e) => e.currentTarget.setCustomValidity("")}
                             />
-                            {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
+                        </div>
+
+                        {/* Asunto */}
+                        <div>
+                            <input
+                                type="text"
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                placeholder="Asunto"
+                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
+                                required
+                                onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa un asunto.")}
+                                onInput={(e) => e.currentTarget.setCustomValidity("")}
+                            />
                         </div>
 
                         {/* Mensaje */}
@@ -101,9 +111,11 @@ export function PagContacto() {
                                 onChange={handleChange}
                                 placeholder="Mensaje"
                                 rows={4}
-                                className={`w-full p-4 border ${errors.message ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]`}
+                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB6F92]"
+                                required
+                                onInvalid={(e) => e.currentTarget.setCustomValidity("Por favor, ingresa un mensaje.")}
+                                onInput={(e) => e.currentTarget.setCustomValidity("")}
                             />
-                            {errors.message && <p className="text-red-500 text-sm mt-2">{errors.message}</p>}
                         </div>
 
                         {/* Botón de Enviar */}
