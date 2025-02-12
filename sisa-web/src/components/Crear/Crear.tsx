@@ -37,26 +37,56 @@ export function Crear() {
   const [backendError, setBackendError] = useState<string | null>(null);
 
   const handleFlowerChange = (flower: keyof FlowerState) => {
-    setSelectedFlowers((prevState) => ({
-      ...prevState,
-      [flower]: !prevState[flower],
-    }));
+    setSelectedFlowers((prevState) => {
+      const newState = {
+        ...prevState,
+        [flower]: !prevState[flower],
+      };
+  
+      // Eliminar error si al menos una flor está seleccionada
+      setErrors((prevErrors) => {
+        const updatedErrors = { ...prevErrors };
+        if (newState.girasoles || newState.rosas) {
+          delete updatedErrors.flowers;
+        }
+        return updatedErrors;
+      });
+  
+      return newState;
+    });
   };
-
+  
   const handleQuantityChange = (flower: keyof QuantityState, value: string | number) => {
     setQuantities((prevState) => ({
       ...prevState,
       [flower]: value,
     }));
+  
+    // Eliminar error si el usuario selecciona una cantidad válida
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      if (value !== "Seleccionar") {
+        delete updatedErrors[`${flower}Cantidad`];
+      }
+      return updatedErrors;
+    });
   };
-
+  
   const handleColorChange = (flower: keyof ColorState, value: string) => {
     setColors((prevState) => ({
       ...prevState,
       [flower]: value,
     }));
+  
+    // Eliminar error si el usuario selecciona un color válido
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      if (value !== "Seleccionar") {
+        delete updatedErrors[`${flower}Color`];
+      }
+      return updatedErrors;
+    });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let newErrors: { [key: string]: string } = {};
