@@ -157,20 +157,16 @@ export function Crear() {
   };
   const handleDelete = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/delete/", { method: "DELETE" });
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message);
-        setImageUrl(""); // Limpia la imagen mostrada
-        setSelectedFlowers({ girasoles: false, rosas: false }); // Resetea las flores seleccionadas
-        setQuantities({ girasoles: "Seleccionar", rosas: "Seleccionar" }); // Resetea la cantidad
-        setColors({ girasoles: "Seleccionar", rosas: "Seleccionar" }); // Resetea el color
-      } else {
-        alert("Error al eliminar la imagen: " + result.detail);
-      }
+      await fetch("http://127.0.0.1:8000/delete/", { method: "DELETE" });
+  
+      // Restablecer los estados sin mostrar alertas
+      setImageUrl(""); 
+      setSelectedFlowers({ girasoles: false, rosas: false });
+      setQuantities({ girasoles: "Seleccionar", rosas: "Seleccionar" });
+      setColors({ girasoles: "Seleccionar", rosas: "Seleccionar" });
+      setErrors({}); // Limpiar errores previos
     } catch (error) {
       console.error("Error al eliminar la imagen:", error);
-      alert("No se pudo eliminar la imagen. Intenta más tarde.");
     }
   };
   // Manejar guardar en carpeta local (ejemplo si integras lógica backend)
@@ -339,7 +335,7 @@ export function Crear() {
               onClick={handleDelete}
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
             >
-              Eliminar o Crear Nuevo
+              Crear Nuevo Ramo
             </button>
 
             {/* Botón Editar */}
@@ -347,7 +343,7 @@ export function Crear() {
               onClick={handleEdit}
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
             >
-              Editar
+              Editar Ramo
             </button>
           </div>
         </div>
