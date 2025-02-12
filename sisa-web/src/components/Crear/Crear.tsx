@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react"; // Importa la animación Lottie
+import { useState, useEffect } from "react";
 
 interface FlowerState {
   girasoles: boolean;
@@ -42,8 +41,7 @@ export function Crear() {
         ...prevState,
         [flower]: !prevState[flower],
       };
-  
-      // Eliminar error si al menos una flor está seleccionada
+
       setErrors((prevErrors) => {
         const updatedErrors = { ...prevErrors };
         if (newState.girasoles || newState.rosas) {
@@ -51,18 +49,17 @@ export function Crear() {
         }
         return updatedErrors;
       });
-  
+
       return newState;
     });
   };
-  
+
   const handleQuantityChange = (flower: keyof QuantityState, value: string | number) => {
     setQuantities((prevState) => ({
       ...prevState,
       [flower]: value,
     }));
-  
-    // Eliminar error si el usuario selecciona una cantidad válida
+
     setErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
       if (value !== "Seleccionar") {
@@ -71,14 +68,13 @@ export function Crear() {
       return updatedErrors;
     });
   };
-  
+
   const handleColorChange = (flower: keyof ColorState, value: string) => {
     setColors((prevState) => ({
       ...prevState,
       [flower]: value,
     }));
-  
-    // Eliminar error si el usuario selecciona un color válido
+
     setErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
       if (value !== "Seleccionar") {
@@ -87,16 +83,15 @@ export function Crear() {
       return updatedErrors;
     });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let newErrors: { [key: string]: string } = {};
 
-    // Validaciones
     if (!selectedFlowers.girasoles && !selectedFlowers.rosas) {
       newErrors.flowers = "Debes seleccionar al menos una flor.";
     }
 
-    // Validaciones para girasoles
     if (selectedFlowers.girasoles) {
       if (quantities.girasoles === "Seleccionar") {
         newErrors.girasolesCantidad = "Debes seleccionar la cantidad de los girasoles.";
@@ -106,7 +101,6 @@ export function Crear() {
       }
     }
 
-    // Validaciones para rosas
     if (selectedFlowers.rosas) {
       if (quantities.rosas === "Seleccionar") {
         newErrors.rosasCantidad = "Debes seleccionar la cantidad de las rosas.";
@@ -121,7 +115,6 @@ export function Crear() {
       return;
     }
 
-    // Crear el objeto data para enviar al backend
     const data = {
       color_girasoles: colors.girasoles,
       color_rosas: colors.rosas,
@@ -155,12 +148,11 @@ export function Crear() {
       setLoading(false); // Desactivar la animación de carga una vez que se haya recibido la respuesta
     }
   };
+
   const handleDelete = async () => {
     try {
       await fetch("http://127.0.0.1:8000/delete/", { method: "DELETE" });
-  
-      // Restablecer los estados sin mostrar alertas
-      setImageUrl(""); 
+      setImageUrl("");
       setSelectedFlowers({ girasoles: false, rosas: false });
       setQuantities({ girasoles: "Seleccionar", rosas: "Seleccionar" });
       setColors({ girasoles: "Seleccionar", rosas: "Seleccionar" });
@@ -169,15 +161,14 @@ export function Crear() {
       console.error("Error al eliminar la imagen:", error);
     }
   };
-  // Manejar guardar en carpeta local (ejemplo si integras lógica backend)
+
   const handleDownload = () => {
     window.open("http://localhost:8000/download/", "_blank");
   };
-  
+
   const handleEdit = () => {
     setImageUrl(""); // Limpia la imagen
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center h-1/2 p-4">
@@ -263,8 +254,6 @@ export function Crear() {
                   <option value="Seleccionar">Seleccionar</option>
                   <option value="Amarillo">Amarillo</option>
                   <option value="Rojo">Rojo</option>
-                  <option value="Blanco">Blanco</option>
-                  <option value="Rosa">Rosa</option>
                 </select>
                 {errors.girasolesColor && <p className="text-red-500 text-sm">{errors.girasolesColor}</p>}
               </div>
@@ -279,7 +268,8 @@ export function Crear() {
                   <option value="Blanco">Blanco</option>
                   <option value="Rosa">Rosa</option>
                   <option value="Amarillo">Amarillo</option>
-                  <option value="Amarillo">Verde</option>
+                  <option value="Verde">Verde</option>
+                  <option value="Rojo">Rojo</option>
                 </select>
                 {errors.rosasColor && <p className="text-red-500 text-sm">{errors.rosasColor}</p>}
               </div>
@@ -303,11 +293,7 @@ export function Crear() {
       {loading && (
         <div className="mt-6">
           <h2 className="text-3xl font-semibold text-[#E46585] mb-4 text-center">Generando tu ramo</h2>
-          <DotLottieReact
-            src="https://lottie.host/982b0727-7b73-4699-8e85-5ef930a85c8e/30pNoU1zT2.lottie"
-            loop
-            autoplay
-          />
+          <img src="/assets/Cargando.gif" alt="Cargando" className="mx-auto"/>
         </div>
       )}
 
@@ -318,27 +304,19 @@ export function Crear() {
           </h2>
           <img src={imageUrl} alt="Ramo de flores generado" className="max-w-full rounded-md mx-auto" />
 
-          {/* Botones para acciones debajo de la imagen */}
           <div className="flex justify-center mt-4 space-x-4">
-
-            {/* Botón Descargar */}
             <button
               onClick={handleDownload}
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
             >
               Descargar
             </button>
-
-
-            {/* Botón Eliminar */}
             <button
               onClick={handleDelete}
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
             >
               Crear Nuevo Ramo
             </button>
-
-            {/* Botón Editar */}
             <button
               onClick={handleEdit}
               className="px-8 py-3 text-white bg-[#FB6F92] rounded-xl hover:bg-[#E46585]"
@@ -350,5 +328,4 @@ export function Crear() {
       )}
     </div>
   );
-
 }
