@@ -253,6 +253,7 @@ export function Crear() {
                   <option value="Blanco">Blanco</option>
                   <option value="Rosa">Rosa</option>
                   <option value="Amarillo">Amarillo</option>
+                  <option value="Amarillo">Verde</option>
                 </select>
                 {errors.rosasColor && <p className="text-red-500 text-sm">{errors.rosasColor}</p>}
               </div>

@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
+import { Quicksand } from "next/font/google"; // Cambio de Urbanist a Quicksand
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-const urbanist = Urbanist({
-  subsets: ["latin"]
-})
 
+const quicksand = Quicksand({
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Sisa",
-  description: "Sistema de creacion de ramos con NextJS",
+  description: "Sistema de creación de ramos con NextJS",
 };
 
 export default function RootLayout({
@@ -20,11 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body
-        className={urbanist.className}
-      >
+      <body className={quicksand.className}>
+        <Navbar /> {/* Asegurar que la Navbar esté presente */}
         {children}
-        
         <Footer />
       </body>
     </html>
